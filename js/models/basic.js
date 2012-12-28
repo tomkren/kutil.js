@@ -14,11 +14,11 @@ App.models.Basic = Backbone.Model.extend({
     draggable : true ,
     target    : '',
     inside    : [],
-    program   : function(){}
+    program   : function(){} 
   },
 
   initialize : function(){
-    console.log( 'init  model ' + this.get('id') );
+    //console.log( 'init  model ' + this.get('id') );
 
     App.all.add( this );
 
@@ -41,12 +41,28 @@ App.models.Basic = Backbone.Model.extend({
     } , this );
 
     this.on( 'step' , function(){
-      this.get('program')();
+      var prog = this.get('program');
+      prog(this);
+
       this.get('inside').each( function(mo){ 
         mo.trigger('step');
       });
     } , this );
 
+  },
+
+  go : function(x,y){
+    this.set('pos',this.plusPos( this.get('pos') , x , y)  );
+
+  },
+
+  plusPos : function( pos , x , y ){
+    var p = pos.split(' ');
+
+    x = parseInt(p[0]) + x ;
+    y = parseInt(p[1]) + y ;
+
+    return x.toString() + ' ' + y.toString() ;
   },
 
   // @TODO implement attribute validation

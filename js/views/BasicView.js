@@ -8,14 +8,24 @@ App.views.BasicView = Backbone.View.extend({
   },
 
   initialize: function() {  
-    console.log('init view ' + this.model.get('id') );
+    //console.log('init view ' + this.model.get('id') );
 
-    this.$htmlDiv = $('<div/>',{id: '__html'+this.model.get('id') });
+    var mo = this.model;
+
+    this.$htmlDiv = $('<div/>',{id: '__html'+mo.get('id') });
     this.$htmlDiv.appendTo( this.$el );
 
-    this.insideViews = this.model.get('inside').map(this.generateInside, this);
+    this.insideViews = mo.get('inside').map(this.generateInside, this);
 
-    this.model.on('change' , this.render , this );
+    mo.on('change' , this.render , this );
+  
+
+    mo.on('change' , this.render , this );
+
+    if( mo.get('type') == 'watch' ){
+      var targetModel = App.all.get( mo.get('target') );
+      targetModel.on('change' , this.render , this);
+    }
 
     
   },
@@ -26,7 +36,7 @@ App.views.BasicView = Backbone.View.extend({
     var el  = this.$el;
     var mo  = this.model;
 
-    console.log('rendering view ' + mo.get('id') );
+    //console.log('rendering view ' + mo.get('id') );
     
     var pos  = mo.get('pos'  ).split(' ');
     var size = mo.get('shape').split(' '); 

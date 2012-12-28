@@ -24,16 +24,17 @@ $(function(){
         html : 'země',
         color : '#449966' },
       { type: 'watch', 
-        target: '_nebe',
+        target: '_box',
         id: '_nebe',
         html: 'nebe',  
         pos: '100 200',
         shape: '250 300',
-        border: 'black solid 1px', },
+        border: 'black solid 1px',
+        program: function(x){ /*console.log('step nebe!');*/} }, 
       { id:'_box' ,
         pos: '530 80',
         color: 'black',
-        program: function(x){console.log('step!');} }
+        program: function(self){ self.go(0,1); } }
 
 
     ],
@@ -48,7 +49,25 @@ $(function(){
 
 	App.rootView.render();
 
+  App.PLAY  = 1;
+  App.PAUSE = 0;
+  App.state = App.PLAY ;
 
+  App.switchState = function(){
+    if( App.state === App.PLAY ){
+      App.state = App.PAUSE ;
+    } else {
+      App.state = App.PLAY ;
+    }
+  }
+
+
+
+  setInterval( function(){
+    if( App.state === App.PLAY ){
+      App.root.trigger('step');
+    }
+  } , 1000/50  );
 
 
 });
