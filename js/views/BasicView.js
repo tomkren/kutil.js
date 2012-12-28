@@ -10,8 +10,10 @@ App.views.BasicView = Backbone.View.extend({
   initialize: function() {  
     console.log('init view ' + this.model.get('id') );
 
-    this.insideViews = this.model.get('inside').map(this.generateInside, this);
+    this.$htmlDiv = $('<div/>',{id: '__html'+this.model.get('id') });
+    this.$htmlDiv.appendTo( this.$el );
 
+    this.insideViews = this.model.get('inside').map(this.generateInside, this);
 
     this.model.on('change' , this.render , this );
 
@@ -43,13 +45,15 @@ App.views.BasicView = Backbone.View.extend({
 
     var html = mo.get('html') ;
     
+    //el.html('');
 
     if( mo.get('type') == 'watch' ){
       var targetModel = App.all.get( mo.get('target') );
       el.append( this.newWatchBox( targetModel , size ) );
     }
 
-    el.append( html );
+    //el.append( html );
+    this.$htmlDiv.html( html );
 
 
     _.chain(cssFeatures).pairs().map(function(p){ el.css(p[0],p[1]) }) ;
@@ -57,7 +61,8 @@ App.views.BasicView = Backbone.View.extend({
     if( mo.get('draggable') ){ 
       el.draggable({
         stop: function( event, ui ) {
-          mo.trigger( 'my_drag' , { x : el.css('left') , y : el.css('top') } );
+          mo.trigger( 'my_drag' , { x : parseInt(el.css('left')) , 
+                                    y : parseInt(el.css('top')) } );
         }
       }); 
     }

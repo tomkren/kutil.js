@@ -10,10 +10,11 @@ App.models.Basic = Backbone.Model.extend({
     shape     : '16 16', // obecne 'prefix arg1 arg2 ...'
     html      : '',
     border    : '',
-    color     : 'yellow',
+    color     : 'white',
     draggable : true ,
     target    : '',
     inside    : [],
+    program   : function(){}
   },
 
   initialize : function(){
@@ -31,21 +32,22 @@ App.models.Basic = Backbone.Model.extend({
 
     this.on( 'my_drag' , function( e ){ 
 
-      console.log('Model '+this.get('id')+' ví o hnutí! [' + e.x +','+e.y +']' );
+      //console.log('Model '+this.get('id')+' ví o hnutí! [' + e.x +','+e.y +']' );
 
       this.set( 'pos' , e.x + ' ' + e.y ); 
 
+
+
+    } , this );
+
+    this.on( 'step' , function(){
+      this.get('program')();
+      this.get('inside').each( function(mo){ 
+        mo.trigger('step');
+      });
     } , this );
 
   },
-
-  initialize2 : function() {
-    console.log( 'init2 model ' + this.get('id') );
-
-
-        
-  },
-
 
   // @TODO implement attribute validation
   validate: function(attributes) {
